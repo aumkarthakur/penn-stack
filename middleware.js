@@ -1,15 +1,21 @@
 import { NextResponse } from 'next/server';
 
-export async function middleware(request) {
+/**
+ * Helper function to build the base URL from the request
+ */
+function getBaseUrl(request) {
     const protocol = request.nextUrl.protocol;
     const hostname = request.headers.get("Host");
-    const homeUrl = `${protocol}//${hostname}`;
-    // make sure user is authenticated by hitting /api/me
+    return `${protocol}//${hostname}`;
+}
+
+/**
+ * Check if the user is authenticated by calling the /api/me endpoint
+ */
+async function checkAuthentication(request) {
+    const baseUrl = getBaseUrl(request);
     try {
-        console.log('Checking authentication');
-        console.log(`${homeUrl}/api/me`);
-        console.log(protocol);
-        const response = await fetch(`${homeUrl}/api/me`, {
+        const response = await fetch(`${baseUrl}/api/me`, {
             method: 'GET',
             credentials: 'include',
             headers: {
@@ -18,25 +24,57 @@ export async function middleware(request) {
             }
         });
 
-        // If the response is ok (status 200), user is authenticated
-        if (response.ok) {
-            const userData = await response.json();
-            if (userData.id) {
-                // User is authenticated, redirect to profile if trying to access auth pages
-                return NextResponse.redirect(new URL('/user/profile', request.url));
-            }
+        if (!response.ok) {
+            return { isAuthenticated: false };
         }
+
+        const userData = await response.json();
+        return {
+            isAuthenticated: Boolean(userData.id),
+            userData
+        };
     } catch (error) {
-        console.error('Auth check error:', error);
+        console.error('Authentication check failed:', error);
+        return { isAuthenticated: false, error };
     }
-    
+}
+
+/**
+ * Check if the current path is an auth page (signin/signup)
+ */
+function isAuthPage(pathname) {
+    return pathname.startsWith('/user/signin') || pathname.startsWith('/user/signup');
+}
+
+/**
+ * Main middleware function to handle authentication and redirects
+ */
+export async function middleware(request) {
+    const { isAuthenticated } = await checkAuthentication(request);
+    const pathname = request.nextUrl.pathname;
+
+    // Handle authenticated users
+    if (isAuthenticated) {
+        // Redirect to profile if trying to access auth pages
+        if (isAuthPage(pathname)) {
+            return NextResponse.redirect(new URL('/user/profile', request.url));
+        }
+        return NextResponse.next();
+    }
+
+    // Handle non-authenticated users
+    if (pathname.startsWith('/user/profile')) {
+        return NextResponse.redirect(new URL('/user/signin', request.url));
+    }
+
     return NextResponse.next();
 }
 
 // Configure which paths the middleware should run on
 export const config = {
-  matcher: [
-    '/user/signin',
-    '/user/signup'
-  ],
+    matcher: [
+        '/user/signin',
+        '/user/signup',
+        '/user/profile'
+    ],
 }; 

@@ -21,6 +21,11 @@ export default function Profile() {
 
         if (!response.ok) {
           if (response.status === 401) {
+            // log out the user
+            await fetch('/api/auth/logout', {
+              method: 'POST',
+              credentials: 'include'
+            });
             router.push('/user/signin');
             return;
           }

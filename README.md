@@ -46,6 +46,22 @@ The application will be available at [http://localhost:3000](http://localhost:30
 - `/app` - Next.js app directory containing pages and components
 - `/api` - API routes and database migrations
 - `/server.js` - Custom Express server configuration
+- `/middleware.js` - Authentication middleware for protected routes
+
+## Authentication Flow
+
+The application uses a middleware-based authentication system that:
+
+- Protects user-specific routes (`/user/profile`)
+- Handles authentication redirects for sign-in and sign-up pages
+- Automatically checks user authentication status via `/api/me` endpoint
+- Redirects authenticated users away from auth pages
+- Redirects unauthenticated users to sign-in when accessing protected routes
+
+Protected routes include:
+- `/user/profile`
+- `/user/signin`
+- `/user/signup`
 
 ## Important Notes
 

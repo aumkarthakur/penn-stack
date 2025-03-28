@@ -58,12 +58,12 @@ export default function Home() {
               <h2 className="text-xl font-semibold text-red-600 font-bricolage mb-2">Database Connection Error</h2>
               <p className="text-gray-600 font-bricolage">{error}</p>
             </div>
-            <h2 className="text-xl font-semibold text-gray-900 font-bricolage mb-4">Setup Instructions</h2>
-            <ol className="list-decimal list-inside space-y-2 text-gray-600 font-bricolage text-sm">
-              <li>Check if PostgreSQL is running on your system</li>
-              <li>Verify your database credentials in the .env file</li>
-              <li>Run database migrations using: <code className="bg-gray-100 px-2 py-1 rounded">npm run migrate</code></li>
-              <li>Start the development server: <code className="bg-gray-100 px-2 py-1 rounded">npm run dev</code></li>
+            <h2 className="text-xl font-semibold text-gray-900 font-bricolage mb-4 text-left">Getting started after deploying</h2>
+            <ol className="list-decimal list-inside space-y-2 text-gray-600 font-bricolage text-sm text-left leading-7">
+              <li>SSH into your droplet and you will be greeted by a PENN Stack setup assistant.</li>
+              <li>If PENN Stack setup assistant does not start, run <code className="bg-gray-100 px-2 py-1 rounded">/opt/setup_scripts/setup.sh</code></li>
+              <li>Your application code will be located in <code className="bg-gray-100 px-2 py-1 rounded">/var/www/html</code></li>
+              <li>You can run <code className="bg-gray-100 px-2 py-1 rounded">pm2 start ecosystem.config.cjs</code> to start the application inside <code className="bg-gray-100 px-2 py-1 rounded">/var/www/html</code></li>
             </ol>
             <button
               onClick={() => window.location.reload()}
