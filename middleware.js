@@ -1,13 +1,14 @@
 import { NextResponse } from 'next/server';
 
 export async function middleware(request) {
-    const homeUrl = request.nextUrl.origin;
-    console.log(request.nextUrl);
-    console.log(request.headers.get("Host"));
+    const protocol = request.nextUrl.protocol;
+    const hostname = request.headers.get("Host");
+    const homeUrl = `${protocol}//${hostname}`;
     // make sure user is authenticated by hitting /api/me
     try {
         console.log('Checking authentication');
         console.log(`${homeUrl}/api/me`);
+        console.log(protocol);
         const response = await fetch(`${homeUrl}/api/me`, {
             method: 'GET',
             credentials: 'include',
