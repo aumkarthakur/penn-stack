@@ -3,6 +3,7 @@ import { NextResponse } from 'next/server';
 export async function middleware(request) {
     const homeUrl = request.nextUrl.origin;
     console.log(request.nextUrl);
+    console.log(request.headers.get("Host"));
     // make sure user is authenticated by hitting /api/me
     try {
         console.log('Checking authentication');
