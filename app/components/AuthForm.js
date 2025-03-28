@@ -2,6 +2,7 @@
 
 import { useState } from 'react';
 import { useRouter } from 'next/navigation';
+import Link from 'next/link';
 
 export default function AuthForm({ type = 'signin' }) {
   const router = useRouter();
@@ -116,23 +117,23 @@ export default function AuthForm({ type = 'signin' }) {
             </div>
           </form>
           <div>
-            <a
+            <Link
               href={type === 'signin' ? '/user/signup' : '/user/signin'}
               className="font-medium text-primary hover:text-primary-hover font-bricolage transition-colors duration-200 text-sm"
             >
               {type === 'signin'
                 ? "Don't have an account? Sign up"
                 : 'Already have an account? Sign in'}
-            </a>
+            </Link>
           </div>
         </div>
         <div className="text-center">
-          <a
+          <Link
             href="/"
             className="font-medium text-gray-600 hover:text-gray-900 font-bricolage transition-colors duration-200 text-sm"
           >
             ← Back to Home
-          </a>
+          </Link>
         </div>
       </div>
     </div>
