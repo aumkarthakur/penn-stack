@@ -26,14 +26,17 @@ export default function Home() {
   }, []);
 
   return (
-    <div className="min-h-screen flex items-center justify-center bg-gray-50 py-12 px-4 sm:px-6 lg:px-8">
-      <div className="max-w-md w-full space-y-8 bg-white p-8 rounded-xl shadow-lg">
+    <div className="min-h-screen flex items-center justify-center bg-white py-12 px-4 sm:px-6 lg:px-8">
+      <div className="max-w-md w-full space-y-8 bg-white p-8">
         <div>
           <h1 className="text-4xl font-extrabold text-primary font-bricolage text-center">
             PENN Stack
           </h1>
+          <p className="mt-4 text-lg text-gray-600 font-bricolage text-center">
+            A modern, scalable full-stack web development architecture.
+          </p>
           <p className="mt-4 text-lg text-gray-600 font-bricolage text-center leading-9">
-            A modern full-stack web application <span className="bg-[#306793] text-white p-1 rounded-md ml-1 mr-1">PostgreSQL</span> <span className="bg-[#f7df1c] text-black p-1 rounded-md ml-1 mr-1">Express.js</span> <span className="bg-[#000] text-white p-1 rounded-md ml-1 mr-1">Next.js</span>  <span className="bg-[#009900] text-white p-1 rounded-md ml-1 mr-1">NGINX</span>
+            <span className="bg-[#306793] text-white p-1 rounded-md ml-1 mr-1">PostgreSQL</span> <span className="bg-[#f7df1c] text-black p-1 rounded-md ml-1 mr-1">Express.js</span> <span className="bg-[#000] text-white p-1 rounded-md ml-1 mr-1">Next.js</span>  <span className="bg-[#009900] text-white p-1 rounded-md ml-1 mr-1">NGINX</span>
           </p>
         </div>
 

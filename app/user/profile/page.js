@@ -6,30 +6,21 @@ import { useRouter } from 'next/navigation';
 export default function Profile() {
   const router = useRouter();
   const [user, setUser] = useState(null);
-  const [loading, setLoading] = useState(true);
   const [error, setError] = useState('');
 
   useEffect(() => {
     const fetchProfile = async () => {
-      const token = localStorage.getItem('token');
-      
-      if (!token) {
-        router.push('/user/signin');
-        return;
-      }
-
       try {
         const response = await fetch('/api/me', {
           method: 'GET',
           headers: {
-            'Authorization': `Bearer ${token}`,
             'Content-Type': 'application/json'
-          }
+          },
+          credentials: 'include'
         });
 
         if (!response.ok) {
           if (response.status === 401) {
-            localStorage.removeItem('token');
             router.push('/user/signin');
             return;
           }
@@ -40,26 +31,23 @@ export default function Profile() {
         setUser(data);
       } catch (err) {
         setError(err.message);
-      } finally {
-        setLoading(false);
       }
     };
 
     fetchProfile();
   }, [router]);
 
-  const handleSignOut = () => {
-    localStorage.removeItem('token');
-    router.push('/user/signin');
+  const handleSignOut = async () => {
+    try {
+      await fetch('/api/auth/logout', {
+        method: 'POST',
+        credentials: 'include'
+      });
+      router.push('/user/signin');
+    } catch (err) {
+      console.error('Error logging out:', err);
+    }
   };
-
-  if (loading) {
-    return (
-      <div className="min-h-screen flex items-center justify-center">
-        <div className="text-xl font-bricolage">Loading...</div>
-      </div>
-    );
-  }
 
   if (error) {
     return (
@@ -70,32 +58,29 @@ export default function Profile() {
   }
 
   return (
-    <div className="min-h-screen bg-gray-50 py-12 px-4 sm:px-6 lg:px-8 flex items-center justify-center">
-      <div className="max-w-md w-full">
+    <div className="min-h-screen bg-gray-50 py-12 px-4 sm:px-6 lg:px-8">
+      <div className="max-w-3xl mx-auto">
         <div className="bg-white shadow rounded-lg p-6">
-          <h1 className="text-2xl font-bold text-gray-900 mb-6 font-bricolage">Profile</h1>
-          
-          <div className="space-y-4">
-            <div>
-              <label className="block text-sm font-medium text-gray-700 font-bricolage">Email</label>
-              <div className="mt-1 text-sm text-gray-900 font-bricolage">{user?.email}</div>
-            </div>
-            
-            <div>
-              <label className="block text-sm font-medium text-gray-700 font-bricolage">Member Since</label>
-              <div className="mt-1 text-sm text-gray-900 font-bricolage">
-                {new Date(user?.created_at).toLocaleDateString()}
-              </div>
-            </div>
-          </div>
-
-          <div className="mt-6">
+          <div className="flex justify-between items-center mb-6">
+            <h1 className="text-2xl font-bold text-gray-900 font-bricolage">Profile</h1>
             <button
               onClick={handleSignOut}
-              className="w-full flex justify-center py-2 px-4 border border-transparent rounded-md shadow-sm text-sm font-medium text-white bg-red-600 hover:bg-red-700 focus:outline-none focus:ring-2 focus:ring-offset-2 focus:ring-red-500 font-bricolage"
+              className="px-4 py-2 text-sm font-medium text-white bg-red-600 rounded-md hover:bg-red-700 focus:outline-none focus:ring-2 focus:ring-offset-2 focus:ring-red-500 font-bricolage transition-colors duration-200"
             >
               Sign Out
             </button>
+          </div>
+          <div className="space-y-4">
+            <div>
+              <label className="block text-sm font-medium text-gray-700 font-bricolage">Email</label>
+              <p className="mt-1 text-sm text-gray-900 font-bricolage">{user?.email}</p>
+            </div>
+            <div>
+              <label className="block text-sm font-medium text-gray-700 font-bricolage">Member Since</label>
+              <p className="mt-1 text-sm text-gray-900 font-bricolage">
+                {new Date(user?.created_at).toLocaleDateString()}
+              </p>
+            </div>
           </div>
         </div>
       </div>

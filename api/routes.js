@@ -76,9 +76,16 @@ router.post("/auth/signin", async (req, res) => {
       { expiresIn: '24h' }
     );
 
+    // Set token in HTTP-only cookie
+    res.cookie('token', token, {
+      httpOnly: true,
+      secure: process.env.NODE_ENV === 'production',
+      sameSite: 'lax',
+      maxAge: 24 * 60 * 60 * 1000 // 24 hours
+    });
+
     res.json({
       message: "Login successful",
-      token,
       user: {
         id: user.id,
         email: user.email,
@@ -103,6 +110,16 @@ router.get("/me", auth, async (req, res) => {
     console.error('Error fetching user:', err);
     res.status(500).json({ error: 500, message: "Error fetching user data" });
   }
+});
+
+// Logout route
+router.post("/auth/logout", (req, res) => {
+  res.clearCookie('token', {
+    httpOnly: true,
+    secure: process.env.NODE_ENV === 'production',
+    sameSite: 'lax'
+  });
+  res.json({ message: "Logged out successfully" });
 });
 
 router.get("/", async (req, res) => {

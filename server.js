@@ -1,5 +1,6 @@
 import express from "express";
 import next from "next";
+import cookieParser from "cookie-parser";
 
 import apiRoutes from "./api/routes.js";
 
@@ -11,8 +12,9 @@ const handle = app.getRequestHandler();
 app.prepare().then(() => {
   const server = express();
 
-  // Parse JSON request bodies
+  // Parse JSON request bodies and cookies
   server.use(express.json());
+  server.use(cookieParser());
   
   server.use("/api", apiRoutes);
 

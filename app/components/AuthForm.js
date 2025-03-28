@@ -24,6 +24,7 @@ export default function AuthForm({ type = 'signin' }) {
         headers: {
           'Content-Type': 'application/json',
         },
+        credentials: 'include',
         body: JSON.stringify(formData),
       });
 
@@ -32,9 +33,6 @@ export default function AuthForm({ type = 'signin' }) {
       if (!response.ok) {
         throw new Error(data.message || 'Something went wrong');
       }
-
-      // Store the token
-      localStorage.setItem('token', data.token);
       
       // Redirect to profile page
       router.push('/user/profile');
